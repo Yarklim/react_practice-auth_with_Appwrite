@@ -52,7 +52,7 @@ const Login = () => {
         </form>
 
         <p>
-          Don't have an account? <Link to="/register">Register</Link>
+          {`Don't have an account?`} <Link to="/register">Register</Link>
         </p>
       </div>
     </div>

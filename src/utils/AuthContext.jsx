@@ -1,8 +1,11 @@
+/* eslint-disable no-unused-vars */
 import { useContext, useState, useEffect, createContext } from 'react';
 import { account } from '../appwriteConfig';
+import { ID } from 'appwrite';
 
 const AuthContext = createContext();
 
+// eslint-disable-next-line react/prop-types
 export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
@@ -19,7 +22,6 @@ export const AuthProvider = ({ children }) => {
         userInfo.password
       );
       let accountDetails = await account.get();
-      console.log('ACCOUNT: ', accountDetails);
       setUser(accountDetails);
     } catch (err) {
       console.error(err);
@@ -32,13 +34,32 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
-  const registerUser = (userInfo) => {};
+  const registerUser = async (userInfo) => {
+    setLoading(true);
+    try {
+      let res = await account.create(
+        ID.unique(),
+        userInfo.email,
+        userInfo.password1,
+        userInfo.name
+      );
+
+      await account.createEmailSession(userInfo.email, userInfo.password1);
+      let accountDetails = await account.get();
+      setUser(accountDetails);
+    } catch (err) {
+      console.error(err);
+    }
+    setLoading(false);
+  };
 
   const checkUserStatus = async () => {
     try {
       let accountDetails = await account.get();
       setUser(accountDetails);
-    } catch (err) {}
+    } catch (err) {
+      console.error(err);
+    }
     setLoading(false);
   };
 
@@ -56,6 +77,7 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   return useContext(AuthContext);
 };
