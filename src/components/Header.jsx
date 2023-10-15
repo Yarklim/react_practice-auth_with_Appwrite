@@ -4,11 +4,7 @@ import { useAuth } from '../utils/AuthContext';
 const Header = () => {
   const navigate = useNavigate();
 
-  const { user } = useAuth();
-
-  const logoutClick = () => {
-    navigate('/login');
-  };
+  const { user, logoutUser } = useAuth();
 
   return (
     <div className="header">
@@ -28,7 +24,7 @@ const Header = () => {
               Profile
             </Link>
 
-            <button onClick={logoutClick} className="btn">
+            <button onClick={logoutUser} className="btn">
               Logout
             </button>
           </>
