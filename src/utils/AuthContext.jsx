@@ -8,7 +8,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    setLoading(false);
+    checkUserStatus();
   }, []);
 
   const loginUser = async (userInfo) => {
@@ -27,11 +27,20 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   };
 
-  const logoutUser = () => {};
+  const logoutUser = () => {
+    account.deleteSession('current');
+    setUser(null);
+  };
 
   const registerUser = (userInfo) => {};
 
-  const checkUserStatus = () => {};
+  const checkUserStatus = async () => {
+    try {
+      let accountDetails = await account.get();
+      setUser(accountDetails);
+    } catch (err) {}
+    setLoading(false);
+  };
 
   const contextData = {
     user,
